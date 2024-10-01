@@ -7,22 +7,30 @@ from src.extractor import fetch_page, fetch_animal_details
 from src.transformer import transform_animal
 from src.loaders import post_animal_batch
 from utils.retry import retry
+from utils.logger import get_logger
 
+logger = get_logger(__name__)
 async def process_batches(session, animals):
+    """
+    Processing data in batches
+    """
     batches = [animals[i:i + BATCH_SIZE] for i in range(0, len(animals), BATCH_SIZE)]
     for batch in batches:
         result = await retry(post_animal_batch, session, batch)
         if result:
-            print(f"Posted batch of {len(batch)} animals.")
+            logger.info(f"Posted batch of {len(batch)} animals.")
         else:
-            print(f"Failed to post batch of {len(batch)} animals after retries.")
+            logger.error(f"Failed to post batch of {len(batch)} animals after retries.")
 
 async def main():
+    """
+    Implements the ETL Process along with Logging
+    """
     async with aiohttp.ClientSession() as session:
         # Extract
         first_page = await retry(fetch_page, session, 1)
         if not first_page:
-            print("Failed to fetch first page.")
+            logger.error("Failed to fetch first page.")
             return
 
         total_pages = first_page['total_pages']
@@ -53,4 +61,4 @@ async def main():
 if __name__ == "__main__":
     start_time = time.time()
     asyncio.run(main())
-    print(f"Completed in {time.time() - start_time} seconds")
+    logger.info(f"Completed in {time.time() - start_time} seconds")
