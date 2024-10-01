@@ -1,13 +1,18 @@
 ## Prerequisites
 
 - Start by downloading the Docker image:
-https://storage.googleapis.com/lp-dev-hiring/images/lp-programming-challenge-1-1625758668.tar.gz
+    https://storage.googleapis.com/lp-dev-hiring/images/lp-programming-challenge-1-1625758668.tar.gz
+    
+- Load the container: 
+   ```bash
+   docker load -i lp-programming-challenge-1-1625758668.tar.gz
+   ```
 
-- Load the container: docker load -i
-lp-programming-challenge-1-1625758668.tar.gz.
+- Expose port 3123 so you can access it: 
 
-- expose port 3123 so you can access it: docker run --rm -p 3123:3123 -ti lp-programming-challenge-1
- 
+   ```bash
+    docker run --rm -p 3123:3123 -ti lp-programming-challenge-1
+    ```
 - Open http://localhost:3123/ to see if things are working.
 
 
